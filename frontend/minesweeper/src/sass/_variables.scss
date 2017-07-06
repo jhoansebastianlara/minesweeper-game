@@ -14,4 +14,11 @@ $colors: (
   )
 );
 
-$game-state-bar-height: 8em;
+$game-state-bar-height: 3em;
+
+// cell
+$cell-background-color: #c0c0c0;
+$cell-background-active-color: #bdbdbd;
+$cell-border-color: #808080;
+$cell-border-active-color: #999;
+$cell-border-ouset-color: #ececec;
