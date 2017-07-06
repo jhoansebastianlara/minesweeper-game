@@ -1,0 +1,30 @@
+// utils
+.truncate-text {
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+.no-padding {
+  padding: 0;
+}
+
+.no-margin {
+  margin: 0;
+}
+
+.no-margin-no-padding {
+  @extend .no-margin;
+  @extend .no-padding;
+}
+
+// messages
+.error-message {
+  color: color(danger)
+}
+
+// flexbox
+.flex_ {
+  display: flex;
+  align-items: center;
+}

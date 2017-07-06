@@ -1,0 +1,17 @@
+// Variables and Theming
+
+$colors: (
+  primary: #4285F4,
+  secondary: #EA4335,
+  success: #3ADB76,
+  warning: #FFAE00,
+  danger: #f53d3d,
+  background-app: #F4F4F4,
+  grays: (
+    light: #E6E6E6,
+    medium: #FEFEFE,
+    dark: #606060
+  )
+);
+
+$toolbar-height: 64px;
