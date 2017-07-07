@@ -9,7 +9,8 @@ export const CONSTANTS = {
   // Available events executed on EventBus.js
   EVENTS: {
     CELL_REVEALED: 'cellRevealed',
-    REVEAL_CELL_BASE: 'revealCell-[ID]'
+    REVEAL_CELL_BASE: 'revealCell-[ID]',
+    GAME_OVER: 'gameOver'
   }
 }
 
@@ -41,7 +42,7 @@ export const MINESWEEPER = {
       PLAYING: 0,
       PAUSE: 1,
       WINNER: 2,
-      LOSER: 3
+      GAME_OVER: 3
     }
   }
 }

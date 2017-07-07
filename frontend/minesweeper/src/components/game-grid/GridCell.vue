@@ -7,7 +7,8 @@
 
 <script>
   import EventBus from '@/shared/EventBus'
-  import {CONSTANTS} from '@/shared/constants'
+  import {CONSTANTS, MINESWEEPER} from '@/shared/constants'
+  import gameMixin from '@/mixins/gameMixin'
 
   export default {
     name: 'grid-cell',
@@ -27,11 +28,21 @@
 
     data () {
       return {
-        isRevealed: false
       }
     },
 
     computed: {
+      isRevealed () {
+        return this.game.grid[this.data.x][this.data.y].isRevealed
+      },
+
+      isPlaying () {
+        let playing = this.game.status === MINESWEEPER.GAME.STATUS.PLAYING
+        let ready = this.game.status === MINESWEEPER.GAME.STATUS.READY_TO_PLAY
+
+        return (playing || ready)
+      },
+
       classObject () {
         let classes = {}
 
@@ -85,10 +96,19 @@
       }
     },
 
+    watch: {
+      isRevealed (revealed) {
+        if (revealed) {
+          EventBus.cellRevealed(this.data.x, this.data.y)
+        }
+      }
+    },
+
     methods: {
       reveal () {
-        this.isRevealed = true
-        EventBus.cellRevealed(this.data.x, this.data.y)
+        if (this.isPlaying) {
+          this.revealCell({cell: this.data, automatically: false})
+        }
       }
     },
 
@@ -97,11 +117,12 @@
       // called to when revealing cells automatically
       EventBus.$on(cellEventName, () => {
         if (!this.isRevealed) {
-          this.isRevealed = true
-          EventBus.cellRevealed(this.data.x, this.data.y)
+          this.revealCell({cell: this.data, automatically: true})
         }
       })
-    }
+    },
+
+    mixins: [gameMixin]
   }
 </script>
 

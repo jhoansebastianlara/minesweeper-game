@@ -4,6 +4,11 @@ export default {
     goToPlay: 'Volver al juego'
   },
 
+  game: {
+    game_over: 'GAME OVER',
+    you_won: '¡GANASTE! 😎'
+  },
+
   user: {
     name: 'Nombre'
   }

@@ -1,7 +1,7 @@
 <template>
   <div class="game-grid">
     <div class="grid">
-      <div class="row" v-for="(row, index) in grid" :key="index">
+      <div class="row" v-for="(row, index) in game.grid" :key="index">
         <grid-cell v-for="(cell, jndex) in row"
                    :data="cell"
                    :key="cell.id">
@@ -10,7 +10,7 @@
     </div>
 
     <div class="grid" v-if="debugging">
-      <div class="row" v-for="(row, index) in grid" :key="index">
+      <div class="row" v-for="(row, index) in game.grid" :key="index">
         <grid-cell v-for="(cell, jndex) in row"
                    :data="cell"
                    :revealed="true"
@@ -23,45 +23,40 @@
 
 <script>
   import GridCell from '@/components/game-grid/GridCell'
-  import {CONSTANTS, MINESWEEPER} from '@/shared/constants'
+  import {CONSTANTS} from '@/shared/constants'
   import EventBus from '@/shared/EventBus'
+  import gameMixin from '@/mixins/gameMixin'
 
   export default {
     name: 'game-grid',
 
-    props: {
-      level: {
-        type: Object,
-        default: () => {
-          return MINESWEEPER.LEVELS.EASY
-        }
-      }
-    },
-
     data () {
       return {
-        grid: null,
+        // grid: null,
         debugging: false
       }
     },
 
     methods: {
       createGrid () {
-        this.grid = []
+        let grid = []
 
-        for (var x = 0; x < this.level.rowsNum; x++) {
-          this.grid[x] = []
+        for (var x = 0; x < this.game.level.rowsNum; x++) {
+          grid[x] = []
 
-          for (var y = 0; y < this.level.colsNum; y++) {
-            this.grid[x][y] = {
+          for (var y = 0; y < this.game.level.colsNum; y++) {
+            grid[x][y] = {
               x,
               y,
               id: x + '-' + y,
               hasMine: false,
-              adjacentMinesNum: 0
+              adjacentMinesNum: 0,
+              isRevealed: false
             }
           }
         }
+
+        this.setGrid(grid)
       },
 
       plantMines () {
@@ -69,12 +64,12 @@
         let x = 0
         let y = 0
 
-        while (minesPlanted < this.level.minesNum) {
-          x = this.getRandomNumber(this.level.rowsNum)
-          y = this.getRandomNumber(this.level.colsNum)
+        while (minesPlanted < this.game.level.minesNum) {
+          x = this.getRandomNumber(this.game.level.rowsNum)
+          y = this.getRandomNumber(this.game.level.colsNum)
 
-          if (!this.grid[x][y].hasMine) {
-            this.plantMine(x, y)
+          if (!this.game.grid[x][y].hasMine) {
+            this.plantMine({x, y})
             // update adjacent cells
             this.updateAdjacentMinesNumInSurroundingCells(x, y)
             minesPlanted++
@@ -82,23 +77,15 @@
         }
       },
 
-      plantMine (x, y) {
-        this.grid[x][y].hasMine = true
-      },
-
       // This function is used to update the 'adjacentMinesNum' value of its surrounding cells
       updateAdjacentMinesNumInSurroundingCells (x, y) {
         let surroundingCellsPositions = this.getSurroundingCellsPositions(x, y)
 
         surroundingCellsPositions.forEach((position) => {
-          this.updateAdjacentMinesCell(position.x, position.y)
+          if (this.existsCell(position.x, position.y)) {
+            this.addAdjacentMine({x: position.x, y: position.y})
+          }
         })
-      },
-
-      updateAdjacentMinesCell (x, y) {
-        if (this.existsCell(x, y)) {
-          this.grid[x][y].adjacentMinesNum++
-        }
       },
 
       /**
@@ -126,13 +113,13 @@
       },
 
       existsCell (x, y) {
-        return (this.grid[x] && this.grid[x][y])
+        return (this.game.grid[x] && this.game.grid[x][y])
       },
 
       cellHasMine (x, y) {
         let hasMine = false
 
-        if (this.existsCell(x, y) && this.grid[x][y].hasMine) {
+        if (this.existsCell(x, y) && this.game.grid[x][y].hasMine) {
           hasMine = true
         }
 
@@ -175,19 +162,24 @@
     created () {
       // executes when user clicks on a cell
       EventBus.$on(CONSTANTS.EVENTS.CELL_REVEALED, ({x, y}) => {
-        this.checkIfRevealSurroundingCells(x, y)
+        if (!this.cellHasMine(x, y)) {
+          this.checkIfRevealSurroundingCells(x, y)
+        }
       })
     },
 
     mounted () {
       this.createGrid()
       this.plantMines()
+      // debugging mode
       this.debugging = this.$route.query && this.$route.query.debugging
     },
 
     components: {
       GridCell
-    }
+    },
+
+    mixins: [gameMixin]
   }
 </script>
 
