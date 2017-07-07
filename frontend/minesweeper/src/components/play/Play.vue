@@ -16,7 +16,7 @@
     data () {
       return {
         currentGame: {
-          level: MINESWEEPER.LEVELS.HARD,
+          level: MINESWEEPER.LEVELS.MEDIUM,
           status: MINESWEEPER.GAME.STATUS.READY_TO_PLAY,
           flagsNum: 0,
           cellsOpenNum: 0,

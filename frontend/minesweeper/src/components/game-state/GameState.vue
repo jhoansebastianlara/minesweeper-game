@@ -21,6 +21,5 @@ export default {
     height: $game-state-bar-height;
     width: 100%;
     z-index: 1;
-    // border: 2px solid purple;
   }
 </style>

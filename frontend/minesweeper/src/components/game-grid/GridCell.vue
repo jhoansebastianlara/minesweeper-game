@@ -1,7 +1,7 @@
 <template>
   <div :class="classObject"
        @click="open">
-    <span>{{ adjacentMinesNum }}</span>
+    <span v-if="!data.hasMine">{{ data.adjacentMinesNum }}</span>
   </div>
 </template>
 
@@ -9,10 +9,22 @@
   export default {
     name: 'grid-cell',
 
+    props: {
+      data: {
+        type: Object,
+        default: () => {
+          return {
+            x: null,
+            y: null,
+            hasMine: false
+          }
+        }
+      }
+    },
+
     data () {
       return {
-        isOpen: false,
-        adjacentMinesNum: 1
+        isOpen: false
       }
     },
 
@@ -23,6 +35,10 @@
         if (this.isOpen) {
           classes['cell-open'] = true
           classes[this.numberClass] = true
+
+          if (this.data.hasMine) {
+            classes['hasMine'] = true
+          }
         } else {
           classes['cell'] = true
         }
@@ -33,7 +49,7 @@
       numberClass () {
         let className
 
-        switch (this.adjacentMinesNum) {
+        switch (this.data.adjacentMinesNum) {
           case 1:
             className = 'one'
             break
@@ -77,36 +93,28 @@
 <style lang="scss">
   @import "~styles";
 
+  ._cell {
+    min-width: $cell-size;
+    width: $cell-size;
+    height: $cell-size;
+    min-height: $cell-size;
+    position: relative;
+    box-sizing: border-box;
+  }
+
   .cell-open {
+    @extend ._cell;
     display: flex;
     justify-content: center;
     align-items: center;
-
-    border: 1px solid blue;
-    min-width: 1.5em;
-    width: 1.5em;
-    height: 1.5em;
-    min-height: 1.5em;
-    background-color: red;
-    position: relative;
     background: $cell-background-active-color;
-    box-sizing: border-box;
-    border: solid $cell-border-color;
+    border: solid $cell-border-active-color;
     border-width: 0 1px 1px 0;
-
   }
 
   .cell {
-    border: 1px solid #bbb;
-    min-width: 1.5em;
-    width: 1.5em;
-    height: 1.5em;
-    min-height: 1.5em;
-
-    display: block;
-    position: relative;
+    @extend ._cell;
     background: $cell-background-color;
-    box-sizing: border-box;
     border: solid $cell-border-color;
     border-width: 0 1px 1px 0;
 
@@ -134,6 +142,7 @@
     }
   }
 
+  // Numbers
   .one {
     color: blue;
   }
@@ -164,6 +173,15 @@
 
   .eight {
     color: #666;
+  }
+
+  // Mines
+  .hasMine {
+    background-position: center center;
+    background-size: 80%;
+    background-repeat: no-repeat;
+    background-image: url("../../assets/icons/mine.png");
+    // background-color: black;
   }
 
 </style>
