@@ -1,30 +1,32 @@
 <template>
   <div :class="classObject"
-       @click="open">
-    <span v-if="!data.hasMine">{{ data.adjacentMinesNum }}</span>
+       @click="reveal">
+    <span v-if="!data.hasMine">{{ data.adjacentMinesNum || '' }}</span>
   </div>
 </template>
 
 <script>
+  import EventBus from '@/shared/EventBus'
+
   export default {
     name: 'grid-cell',
 
     props: {
       data: {
         type: Object,
-        default: () => {
-          return {
-            x: null,
-            y: null,
-            hasMine: false
-          }
-        }
+        required: true
+      },
+
+      // debug purposes
+      revealed: {
+        type: Boolean,
+        default: false
       }
     },
 
     data () {
       return {
-        isOpen: false
+        isRevealed: false
       }
     },
 
@@ -32,8 +34,8 @@
       classObject () {
         let classes = {}
 
-        if (this.isOpen) {
-          classes['cell-open'] = true
+        if (this.isRevealed || this.revealed) {
+          classes['cell-revealed'] = true
           classes[this.numberClass] = true
 
           if (this.data.hasMine) {
@@ -83,9 +85,21 @@
     },
 
     methods: {
-      open () {
-        this.isOpen = true
+      reveal () {
+        this.isRevealed = true
+        EventBus.cellOpen(this.data.x, this.data.y)
       }
+    },
+
+    created () {
+      let cellEventName = 'revealCell-' + this.data.id
+      // called to when revealing cells automatically
+      EventBus.$on(cellEventName, () => {
+        if (!this.isRevealed) {
+          this.isRevealed = true
+          EventBus.cellOpen(this.data.x, this.data.y)
+        }
+      })
     }
   }
 </script>
@@ -102,7 +116,7 @@
     box-sizing: border-box;
   }
 
-  .cell-open {
+  .cell-revealed {
     @extend ._cell;
     display: flex;
     justify-content: center;
