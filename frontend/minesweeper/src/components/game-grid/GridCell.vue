@@ -7,6 +7,7 @@
 
 <script>
   import EventBus from '@/shared/EventBus'
+  import {CONSTANTS} from '@/shared/constants'
 
   export default {
     name: 'grid-cell',
@@ -87,17 +88,17 @@
     methods: {
       reveal () {
         this.isRevealed = true
-        EventBus.cellOpen(this.data.x, this.data.y)
+        EventBus.cellRevealed(this.data.x, this.data.y)
       }
     },
 
     created () {
-      let cellEventName = 'revealCell-' + this.data.id
+      let cellEventName = (CONSTANTS.EVENTS.REVEAL_CELL_BASE).replace('[ID]', this.data.id)
       // called to when revealing cells automatically
       EventBus.$on(cellEventName, () => {
         if (!this.isRevealed) {
           this.isRevealed = true
-          EventBus.cellOpen(this.data.x, this.data.y)
+          EventBus.cellRevealed(this.data.x, this.data.y)
         }
       })
     }

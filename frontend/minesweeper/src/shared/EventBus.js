@@ -1,14 +1,15 @@
 import Vue from 'vue'
+import {CONSTANTS} from '@/shared/constants'
 
 export default new Vue({
   methods: {
-    cellOpen (x, y) {
-      this.$emit('cellOpen', {x, y})
+    cellRevealed (x, y) {
+      this.$emit(CONSTANTS.EVENTS.CELL_REVEALED, {x, y})
     },
 
     revealCell (x, y) {
-      let cellEventName = 'revealCell-' + x + '-' + y
-      console.log('emit: ', cellEventName)
+      let id = x + '-' + y
+      let cellEventName = (CONSTANTS.EVENTS.REVEAL_CELL_BASE).replace('[ID]', id)
       this.$emit(cellEventName)
     }
   }

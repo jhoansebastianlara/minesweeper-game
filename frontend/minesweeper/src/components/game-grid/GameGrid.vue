@@ -1,7 +1,5 @@
 <template>
   <div class="game-grid">
-    <!-- <pre>{{ grid }}</pre> -->
-
     <div class="grid">
       <div class="row" v-for="(row, index) in grid" :key="index">
         <grid-cell v-for="(cell, jndex) in row"
@@ -10,7 +8,8 @@
         </grid-cell>
       </div>
     </div>
-    <div class="grid">
+
+    <div class="grid" v-if="debugging">
       <div class="row" v-for="(row, index) in grid" :key="index">
         <grid-cell v-for="(cell, jndex) in row"
                    :data="cell"
@@ -19,13 +18,12 @@
         </grid-cell>
       </div>
     </div>
-
   </div>
 </template>
 
 <script>
   import GridCell from '@/components/game-grid/GridCell'
-  import {MINESWEEPER} from '@/shared/constants'
+  import {CONSTANTS, MINESWEEPER} from '@/shared/constants'
   import EventBus from '@/shared/EventBus'
 
   export default {
@@ -42,7 +40,8 @@
 
     data () {
       return {
-        grid: null
+        grid: null,
+        debugging: false
       }
     },
 
@@ -107,7 +106,6 @@
       * all hidden surrounding cells.
       */
       checkIfRevealSurroundingCells (x, y) {
-        console.log('checkIfRevealSurroundingCells...', x, y)
         let surroundingCellsPositions = this.getSurroundingCellsPositions(x, y)
         let positionsLength = surroundingCellsPositions.length
         let shouldRevealSurrondingMines = true
@@ -117,19 +115,12 @@
 
           if (this.cellHasMine(position.x, position.y)) {
             shouldRevealSurrondingMines = false
-            console.log('mine found...', position)
           }
         }
 
-        console.log('shouldRevealSurrondingMines?', shouldRevealSurrondingMines)
         if (shouldRevealSurrondingMines) {
-          console.log('reveal from: ', x, y)
           surroundingCellsPositions.forEach((position) => {
-            console.log('revealing: ', position.x, position.y)
             EventBus.revealCell(position.x, position.y)
-            // if (this.existsCell(position.x, position.y)) {
-            //   this.grid[x][y].
-            // }
           })
         }
       },
@@ -168,6 +159,11 @@
           {x: x - 1, y: y - 1}
         ]
 
+        // remove non-existent cells
+        surroundingPositions = surroundingPositions.filter((position) => {
+          return this.existsCell(position.x, position.y)
+        })
+
         return surroundingPositions
       },
 
@@ -178,8 +174,7 @@
 
     created () {
       // executes when user clicks on a cell
-      EventBus.$on('cellOpen', ({x, y}) => {
-        console.log('cellOpen done', x, y)
+      EventBus.$on(CONSTANTS.EVENTS.CELL_REVEALED, ({x, y}) => {
         this.checkIfRevealSurroundingCells(x, y)
       })
     },
@@ -187,6 +182,7 @@
     mounted () {
       this.createGrid()
       this.plantMines()
+      this.debugging = this.$route.query && this.$route.query.debugging
     },
 
     components: {

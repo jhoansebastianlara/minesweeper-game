@@ -4,6 +4,12 @@ export const CONSTANTS = {
     DEFAULT: 'en',
     EN: 'en',
     ES: 'es'
+  },
+
+  // Available events executed on EventBus.js
+  EVENTS: {
+    CELL_REVEALED: 'cellRevealed',
+    REVEAL_CELL_BASE: 'revealCell-[ID]'
   }
 }
 
