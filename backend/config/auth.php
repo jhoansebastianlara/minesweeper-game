@@ -42,7 +42,11 @@ return [
         ],
 
         'api' => [
-            'driver' => 'token',
+            //'driver' => 'token',
+            /*
+            * Use Passport's TokenGuard when authenticating incoming API requests
+            */
+            'driver' => 'passport',
             'provider' => 'users',
         ],
     ],
