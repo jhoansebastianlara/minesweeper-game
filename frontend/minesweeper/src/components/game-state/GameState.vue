@@ -1,5 +1,8 @@
 <template>
   <div class="game-state">
+    <div class="options">
+      <a @click="$emit('openMenu')"><img src="../../assets/icons/menu.png" alt=""></a>
+    </div>
     <div class="game-info-container">
       <div class="item">
         <div class="cell-minesweeper" @click="restartGame">
@@ -16,6 +19,7 @@
         <div class="flag-option">{{ $t('game.flag') }}</div>
       </div>
     </div>
+    <div class="options"></div>
   </div>
 </template>
 
@@ -79,8 +83,9 @@
 
   .game-state {
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
     align-items: center;
+    // flex-direction: column;
     background: color(grays, medium);
     position: fixed;
     top: 0;
@@ -89,6 +94,17 @@
     height: $game-state-bar-height;
     width: 100%;
     z-index: 1;
+
+    .options {
+      width: 2em;
+
+      a {
+        margin: 0 .5em;
+        img {
+          width: 1em;
+        }
+      }
+    }
 
     .game-info-container {
       display: flex;
@@ -114,7 +130,7 @@
         &:after {
           border: 2px outset $cell-border-ouset-color;
           background-position: center center;
-          background-size: 100%;
+          background-size: 90%;
           background-repeat: no-repeat;
           background-image: url("../../assets/icons/smile-small.png");
         }
@@ -124,9 +140,9 @@
       		border: none;
       		border-width: none;
           background-position: center center;
-          background-size: 100%;
+          background-size: 95%;
           background-repeat: no-repeat;
-          background-image: url("../../assets/icons/smile-small.png");
+          background-image: url("../../assets/icons/face-cool.png");
       	}
       }
 
@@ -136,7 +152,6 @@
         align-items: center;
         background: black;
         padding: 0 1em;
-        font-size: 1.5rem;
         height: $cell-size;
 
         span {
@@ -146,9 +161,10 @@
 
       .flag-option {
         background: color(grays, dark);
-        padding: .4em 1em;
+        padding: .2em .7em;
         color: color(grays, light);
         border-radius: .25em;
+        white-space: nowrap;
       }
     }
 

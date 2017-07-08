@@ -11,8 +11,8 @@ export default {
       'getSession'
     ],
     actions: [
-      'logIn',
-      'logOut'
+      'login',
+      'logout'
     ],
     mutations: [
       'setAuthUser'

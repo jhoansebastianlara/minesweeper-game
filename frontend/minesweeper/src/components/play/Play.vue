@@ -1,6 +1,13 @@
 <template>
   <div class="play">
-    <game-state></game-state>
+    <auth v-show="showAuthModal" @close="showAuthModal = false"></auth>
+    <side-menu v-show="showSideMenu"
+               @close="showSideMenu = false"
+               @login="showAuthModal = true">
+    </side-menu>
+
+    <game-state @openMenu="showSideMenu = true"></game-state>
+
     <game-grid></game-grid>
 
     <transition name="fade">
@@ -17,8 +24,10 @@
   import EventBus from '@/shared/EventBus'
   import {MINESWEEPER} from '@/shared/constants'
   // components
+  import SideMenu from '@/components/side-menu/SideMenu'
   import GameState from '@/components/game-state/GameState'
   import GameGrid from '@/components/game-grid/GameGrid'
+  import Auth from '@/components/auth/Auth'
 
   export default {
     name: 'play',
@@ -26,7 +35,9 @@
     data () {
       return {
         showWinner: false,
-        showGameOver: false
+        showGameOver: false,
+        showSideMenu: true,
+        showAuthModal: false
       }
     },
 
@@ -40,12 +51,12 @@
 
           case MINESWEEPER.GAME.STATUS.GAME_OVER:
             this.showGameOver = true
-            EventBus.gameFinish()
+            EventBus.gameFinish(MINESWEEPER.GAME.STATUS.GAME_OVER)
             break
 
           case MINESWEEPER.GAME.STATUS.WINNER:
             this.showWinner = true
-            EventBus.gameFinish()
+            EventBus.gameFinish(MINESWEEPER.GAME.STATUS.WINNER)
             break
 
           default:
@@ -55,9 +66,14 @@
       }
     },
 
+    mounted () {
+    },
+
     components: {
+      SideMenu,
       GameState,
-      GameGrid
+      GameGrid,
+      Auth
     },
 
     mixins: [gameMixin]
@@ -66,6 +82,23 @@
 
 <style lang="scss">
   @import "~styles";
+
+  .play {
+    height: 100%;
+    font-size: 1.8rem;
+  }
+
+  .auth-container {
+    margin-top: $game-state-bar-height;
+    height: 1.8em;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    a {
+      font-size: 1.5rem;
+    }
+  }
 
   .game-finished {
     position: fixed;
@@ -77,6 +110,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    background: rgba(0, 0, 0, .4);
 
     span {
       font-weight: bold;

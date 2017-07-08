@@ -52,7 +52,7 @@ export const MINESWEEPER = {
 
 export const INITIAL_GAME_STATE = () => {
   return {
-    level: MINESWEEPER.LEVELS.EASY,
+    level: MINESWEEPER.LEVELS.MEDIUM,
     status: MINESWEEPER.GAME.STATUS.READY_TO_PLAY,
     grid: null,
     flagsNum: 0,
@@ -61,4 +61,39 @@ export const INITIAL_GAME_STATE = () => {
     time: 0,
     score: 0
   }
+}
+
+// -- API --
+// endpoints
+export const ENDPOINTS = {
+  USER: {
+    ROOT: 'user',
+    AUTH: 'auth'
+  },
+  GAMES: {
+    ROOT: 'games',
+    DETAIL: 'games/:id',
+    CELLS: 'games/:id/cells'
+  }
+}
+
+// The API attempts to return appropriate HTTP status codes for every request
+export const HTTP_STATUS = {
+  OK: 200,
+  CREATED: 201,
+  BAD_REQUEST: 400,
+  UNAUTHORIZED: 401,
+  FORBIDDEN: 403,
+  NOT_FOUND: 404,
+  INTERNAL_ERROR: 500
+}
+
+// When the this API returns error messages, it does so in JSON format.
+export const ERROR_CODES = {
+  // Corresponds with HTTP 404 - the specified resource was not found.
+  NOT_FOUND: 34,
+  // Corresponds with HTTP 400. One or more required inputs missing
+  MISSING_FIELDS: 45,
+  // Corresponds with HTTP 500 - An unknown internal error occurred.
+  INTERNAL_ERROR: 131
 }

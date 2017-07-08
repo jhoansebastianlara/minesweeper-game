@@ -1,9 +1,35 @@
-// contain global styles
+* { padding: 0; margin: 0; }
+html, body, #fullheight {
+  min-height: 100% !important;
+  height: 100%;
+}
+
 body {
 	font-family: "ヒラギノ角ゴ Pro W3", "Hiragino Kaku Gothic Pro", Meiryo, "メイリオ", "ＭＳ Ｐゴシック", Verdana, Geneva, Arial, Helvetica;
 	word-wrap: break-word;
 	word-break:break-all;
   background: color(grays, light);
+}
+
+a {
+	cursor: pointer;
+	color: color(primary);
+
+	&:hover {
+    color: color(primary-light);
+		text-decoration: underline;
+  }
+}
+
+.cool-input {
+  border-radius: .25em;
+  width: 100%;
+	margin: .2em 0;
+  padding: 0 .25em;
+	box-sizing: border-box;
+  font-size: 1rem;
+  line-height: 2;
+  border: 1px solid rgba(0, 0, 0, .15);
 }
 
 ._cell {

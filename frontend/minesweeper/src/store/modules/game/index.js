@@ -14,7 +14,6 @@ const getters = {
 
 const mutations = {
   [types.game.mutations.setGame]: (state, newGame) => {
-    console.log('newGame: ', newGame)
     state.game.status = MINESWEEPER.GAME.STATUS.READY_TO_PLAY
     state.game = newGame
   },
@@ -58,7 +57,6 @@ const actions = {
   },
 
   [types.game.actions.restartGame]: ({commit}) => {
-    console.log('restartGame...')
     return new Promise((resolve, reject) => {
       commit(types.game.mutations.setGame, INITIAL_GAME_STATE())
       EventBus.resetGame()
@@ -81,10 +79,7 @@ const actions = {
       }
 
       let levelSize = state.game.level.rowsNum * state.game.level.colsNum
-      console.log('levelSize: ', levelSize)
       let minesNum = state.game.level.minesNum
-      console.log('minesNum: ', minesNum)
-      console.log('state.game.cellsRevealedNum: ', state.game.cellsRevealedNum)
       // check if the user won
       if (state.game.cellsRevealedNum === (levelSize - minesNum)) {
         dispatch(types.game.actions.doWinner)

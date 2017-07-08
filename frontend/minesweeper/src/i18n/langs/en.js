@@ -1,7 +1,11 @@
 export default {
   global: {
     pageNotFound: 'Page not found 😐',
-    goToPlay: 'Go to play'
+    goToPlay: 'Go to play',
+    close: 'Close',
+    login: 'Login',
+    logout: 'Logout',
+    general_error: 'Something was wrong, try later'
   },
 
   game: {
@@ -11,6 +15,7 @@ export default {
   },
 
   user: {
-    name: 'Name'
+    email: 'Email',
+    enter_valid_email_error: 'You should enter a valid email'
   }
 }

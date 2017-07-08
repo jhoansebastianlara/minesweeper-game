@@ -195,8 +195,11 @@
   @import "~styles";
 
   .game-grid {
-    margin-top: $game-state-bar-height + .2;
+    // padding-top: $game-state-bar-height + .5;
     display: flex;
+    align-items: center;
+    // height: 100%;
+    width: 100%;
 
     .grid {
       display: inline-block;
@@ -205,7 +208,7 @@
       .row {
         display: flex;
         justify-content: center;
-        font-size: 1.5rem;
+        // font-size: 1.5rem;
       }
     }
   }

@@ -1,4 +1,6 @@
+import {ENDPOINTS, HTTP_STATUS, ERROR_CODES} from '@/shared/constants'
 import types from '@/store/types'
+import Vue from 'vue'
 
 const state = {
   session: {
@@ -22,15 +24,61 @@ const mutations = {
 }
 
 const actions = {
-  [types.auth.actions.logIn]: ({commit}, {username}) => {
+  [types.auth.actions.login]: ({commit}, username) => {
+    console.log('logIn...')
     return new Promise((resolve, reject) => {
-      // set the authenticated user
-      commit(types.auth.mutations.setAuthUser, username)
-      resolve({success: true})
+      // Vue.http.get(ENDPOINTS.GAMES.ROOT)
+      //   .then(response => {
+      //     console.log('response: ', response)
+      //
+      //     // validate the response status code is ok
+      //     if (response.status === HTTP_STATUS.OK) {
+      //       let data = response.body
+      //       console.log('data: ', data)
+      //
+      //       resolve({success: true})
+      //     } else {
+      //       resolve({
+      //         success: false,
+      //         error: ERROR_CODES.INTERNAL_ERROR
+      //       })
+      //     }
+      //   }, response => {
+      //     // error callback
+      //     reject({
+      //       success: false,
+      //       error: ERROR_CODES.INTERNAL_ERROR
+      //     })
+      //   })
+      Vue.http.post(ENDPOINTS.USER.AUTH, {username})
+        .then(response => {
+          console.log('response: ', response)
+
+          // validate the response status code is ok
+          if (response.status === HTTP_STATUS.OK) {
+            let data = response.body
+            console.log('data: ', data)
+            // set the authenticated user
+            commit(types.auth.mutations.setAuthUser, username)
+            resolve({success: true})
+          } else {
+            resolve({
+              success: false,
+              error: ERROR_CODES.INTERNAL_ERROR
+            })
+          }
+        }, response => {
+          // error callback
+          reject({
+            success: false,
+            error: ERROR_CODES.INTERNAL_ERROR
+          })
+        })
     })
   },
 
-  [types.auth.actions.logOut]: ({commit}) => {
+  [types.auth.actions.logout]: ({commit}) => {
+    console.log('logout...')
     return new Promise((resolve, reject) => {
       // destroy authenticated user
       commit(types.auth.mutations.setAuthUser, null)

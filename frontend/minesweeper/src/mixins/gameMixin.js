@@ -4,6 +4,7 @@ import types from '@/store/types'
 export default {
   computed: {
     ...mapGetters({
+      session: types.auth.getters.getSession,
       game: types.game.getters.getGame
     })
   },
