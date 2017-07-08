@@ -6,7 +6,8 @@ export default {
 
   game: {
     game_over: 'GAME OVER',
-    you_won: '¡GANASTE! 😎'
+    you_won: '¡GANASTE!',
+    flag: 'Bandera'
   },
 
   user: {

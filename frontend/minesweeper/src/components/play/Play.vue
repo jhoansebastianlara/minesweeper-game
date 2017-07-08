@@ -1,5 +1,5 @@
 <template>
-  <div class="">
+  <div class="play">
     <game-state></game-state>
     <game-grid></game-grid>
 
@@ -9,14 +9,12 @@
         <span class="you-won" v-show="showWinner">{{ $t('game.you_won') }}</span>
       </div>
     </transition>
-    status: {{ game.status }}
-    cellsRevealedNum: {{ game.cellsRevealedNum }}
-    moves: {{ game.moves }}
   </div>
 </template>
 
 <script>
   import gameMixin from '@/mixins/gameMixin'
+  import EventBus from '@/shared/EventBus'
   import {MINESWEEPER} from '@/shared/constants'
   // components
   import GameState from '@/components/game-state/GameState'
@@ -35,8 +33,24 @@
     watch: {
       'game.status' (newStatus) {
         console.log('newStatus: ', newStatus)
-        if (newStatus === MINESWEEPER.GAME.STATUS.GAME_OVER) {
-          this.showGameOver = true
+        switch (newStatus) {
+          case MINESWEEPER.GAME.STATUS.PLAYING:
+            EventBus.gameStart()
+            break
+
+          case MINESWEEPER.GAME.STATUS.GAME_OVER:
+            this.showGameOver = true
+            EventBus.gameFinish()
+            break
+
+          case MINESWEEPER.GAME.STATUS.WINNER:
+            this.showWinner = true
+            EventBus.gameFinish()
+            break
+
+          default:
+            this.showGameOver = false
+            this.showWinner = false
         }
       }
     },
@@ -54,7 +68,7 @@
   @import "~styles";
 
   .game-finished {
-    position: absolute;
+    position: fixed;
     top: $game-state-bar-height;
     right: 0;
     bottom: 0;

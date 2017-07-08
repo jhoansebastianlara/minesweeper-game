@@ -1,18 +1,86 @@
 <template>
   <div class="game-state">
-    top
+    <div class="game-info-container">
+      <div class="item">
+        <div class="cell-minesweeper" @click="restartGame">
+        </div>
+      </div>
+
+      <div class="item">
+        <div class="timer">
+          <span>{{ time }}</span>
+        </div>
+      </div>
+
+      <div class="item">
+        <div class="flag-option">{{ $t('game.flag') }}</div>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
-export default {
-}
+  import EventBus from '@/shared/EventBus'
+  import {CONSTANTS} from '@/shared/constants'
+  import gameMixin from '@/mixins/gameMixin'
+
+  export default {
+    name: 'game-status',
+
+    data () {
+      return {
+        timer: null,
+        time: 0
+      }
+    },
+
+    methods: {
+      startTimer () {
+        this.clearTimer()
+
+        this.timer = setInterval(() => {
+          this.time++
+        }, 1000)
+      },
+
+      stopTimer () {
+        if (this.timer) {
+          clearInterval(this.timer)
+        }
+      },
+
+      clearTimer () {
+        this.stopTimer()
+        this.time = 0
+      }
+    },
+
+    created () {
+      EventBus.$on(CONSTANTS.EVENTS.GAME_START, () => {
+        this.startTimer()
+      })
+
+      EventBus.$on(CONSTANTS.EVENTS.RESET_GAME, () => {
+        this.clearTimer()
+      })
+
+      EventBus.$on(CONSTANTS.EVENTS.GAME_FINISH, (status) => {
+        console.log('GAME_FINISH: ', status)
+        this.stopTimer()
+      })
+    },
+
+    mixins: [gameMixin]
+  }
 </script>
 
 <style lang="scss">
   @import "~styles";
 
   .game-state {
+    display: flex;
+    justify-content: center;
+    align-items: center;
     background: color(grays, medium);
     position: fixed;
     top: 0;
@@ -21,5 +89,68 @@ export default {
     height: $game-state-bar-height;
     width: 100%;
     z-index: 1;
+
+    .game-info-container {
+      display: flex;
+      justify-content: space-around;
+      width: 25em;
+      height: 100%;
+      max-width: 100%;
+
+      .item {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .cell-minesweeper {
+        @extend .cell;
+        min-width: $cell-size + .5;
+        width: $cell-size + .5;
+        height: $cell-size + .5;
+        min-height: $cell-size + .5;
+
+        &:after {
+          border: 2px outset $cell-border-ouset-color;
+          background-position: center center;
+          background-size: 100%;
+          background-repeat: no-repeat;
+          background-image: url("../../assets/icons/smile-small.png");
+        }
+
+        &:active:after {
+      		background: none;
+      		border: none;
+      		border-width: none;
+          background-position: center center;
+          background-size: 100%;
+          background-repeat: no-repeat;
+          background-image: url("../../assets/icons/smile-small.png");
+      	}
+      }
+
+      .timer {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background: black;
+        padding: 0 1em;
+        font-size: 1.5rem;
+        height: $cell-size;
+
+        span {
+          color: color(danger);
+        }
+      }
+
+      .flag-option {
+        background: color(grays, dark);
+        padding: .4em 1em;
+        color: color(grays, light);
+        border-radius: .25em;
+      }
+    }
+
   }
 </style>

@@ -12,7 +12,8 @@ export default {
     ...mapActions({
       startGame: types.game.actions.startGame,
       revealCell: types.game.actions.revealCell,
-      gameOver: types.game.actions.gameOver
+      gameOver: types.game.actions.gameOver,
+      restartGame: types.game.actions.restartGame
     }),
 
     ...mapMutations({

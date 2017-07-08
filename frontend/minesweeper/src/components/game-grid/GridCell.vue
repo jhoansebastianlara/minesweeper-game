@@ -129,55 +129,6 @@
 <style lang="scss">
   @import "~styles";
 
-  ._cell {
-    min-width: $cell-size;
-    width: $cell-size;
-    height: $cell-size;
-    min-height: $cell-size;
-    position: relative;
-    box-sizing: border-box;
-  }
-
-  .cell-revealed {
-    @extend ._cell;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background: $cell-background-active-color;
-    border: solid $cell-border-active-color;
-    border-width: 0 1px 1px 0;
-  }
-
-  .cell {
-    @extend ._cell;
-    background: $cell-background-color;
-    border: solid $cell-border-color;
-    border-width: 0 1px 1px 0;
-
-    overflow: hidden;
-    cursor: pointer;
-    pointer-events: none;
-
-    &:after {
-      content: '';
-      position: absolute;
-      left: 0; top: 0;
-      width: 100%; height: 100%;
-      box-sizing: border-box;
-      background: $cell-background-color;
-      border: 3px outset $cell-border-ouset-color;
-      font-size: .75rem;
-      text-align: center;
-      pointer-events: auto;
-    }
-
-    &:active:after {
-      background: $cell-background-active-color;
-      border: solid $cell-border-active-color;
-      border-width: 2px 0 0 2px;
-    }
-  }
-
   // Numbers
   .one {
     color: blue;

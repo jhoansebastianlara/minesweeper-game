@@ -25,14 +25,18 @@ export default {
     ],
     actions: [
       'startGame',
+      'restartGame',
       'revealCell',
-      'gameOver'
+      'gameOver',
+      'doWinner'
     ],
     mutations: [
+      'setGame',
       'setGrid',
       'plantMine',
       'addAdjacentMine',
       'setRevealCell',
+      'setTime',
       'setGameStatus'
     ]
   })

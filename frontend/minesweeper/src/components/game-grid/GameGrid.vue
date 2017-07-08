@@ -38,6 +38,11 @@
     },
 
     methods: {
+      setup () {
+        this.createGrid()
+        this.plantMines()
+      },
+
       createGrid () {
         let grid = []
 
@@ -166,11 +171,14 @@
           this.checkIfRevealSurroundingCells(x, y)
         }
       })
+
+      EventBus.$on(CONSTANTS.EVENTS.RESET_GAME, () => {
+        this.setup()
+      })
     },
 
     mounted () {
-      this.createGrid()
-      this.plantMines()
+      this.setup()
       // debugging mode
       this.debugging = this.$route.query && this.$route.query.debugging
     },

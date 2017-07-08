@@ -10,7 +10,10 @@ export const CONSTANTS = {
   EVENTS: {
     CELL_REVEALED: 'cellRevealed',
     REVEAL_CELL_BASE: 'revealCell-[ID]',
-    GAME_OVER: 'gameOver'
+    GAME_OVER: 'gameOver',
+    RESET_GAME: 'resetGame',
+    GAME_START: 'gameStart',
+    GAME_FINISH: 'gameFinish'
   }
 }
 
@@ -44,5 +47,18 @@ export const MINESWEEPER = {
       WINNER: 2,
       GAME_OVER: 3
     }
+  }
+}
+
+export const INITIAL_GAME_STATE = () => {
+  return {
+    level: MINESWEEPER.LEVELS.EASY,
+    status: MINESWEEPER.GAME.STATUS.READY_TO_PLAY,
+    grid: null,
+    flagsNum: 0,
+    cellsRevealedNum: 0,
+    moves: 0,
+    time: 0,
+    score: 0
   }
 }
