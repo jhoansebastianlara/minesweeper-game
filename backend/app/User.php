@@ -27,4 +27,11 @@ class User extends Authenticatable
     protected $hidden = [
         'remember_token',
     ];
+
+    /**
+    * Define relationship with games
+    */
+    public function games() {
+      return $this->hasMany('App\Game');
+    }
 }

@@ -18,3 +18,10 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 
 Route::post('auth', 'UserController@login');
+
+// Game endpoints
+Route::get('games', 'GameController@index')->middleware('auth:api');
+Route::get('games/{game}', 'GameController@show')->middleware('auth:api');
+Route::post('games', 'GameController@create')->middleware('auth:api');
+Route::put('games/{game}/cells', 'GameController@updateWithCells')->middleware('auth:api');
+Route::put('games/{game}', 'GameController@update')->middleware('auth:api');

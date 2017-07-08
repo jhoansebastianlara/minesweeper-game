@@ -6,8 +6,7 @@ use App\User;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
-class UserController extends Controller
-{
+class UserController extends Controller {
   /**
    * generate token for user
    *
@@ -20,20 +19,27 @@ class UserController extends Controller
     // Find user with username
     $user = User::where('username', $username)->first();
 
+    $games = [];
     if ($user) {
-      // TODO load games
+      // Retrieve games for user
+      $games = $user->games;
     } else {
       // Create user for new username
       $user = new User;
       $user->username = $username;
       $user->save();
-      $token = 'no-user';
     }
 
     // Creating a token for user
     $token = $user->createToken('MineSweeperToken')->accessToken;
 
     // Response
-    return ["username"=>$username, "user"=>$user, "token"=>$token];
+    return [
+      "user"=>[
+        "id"=>$user->id,
+        "games"=>$games
+      ],
+      "token"=>$token
+    ];
   }
 }
