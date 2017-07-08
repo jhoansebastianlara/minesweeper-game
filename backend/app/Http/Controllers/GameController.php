@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Game;
 use App\Cell;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Config;
 
 class GameController extends Controller {
   /**
@@ -16,7 +17,7 @@ class GameController extends Controller {
   public function index(Request $request) {
     // load games for logged user
     $games = Game::where('user_id', $request->user()->id)->get();
-    return ["games"=>$games];
+    return ['games'=>$games];
   }
 
   /**
@@ -26,6 +27,19 @@ class GameController extends Controller {
    * @return Response
    */
   public function create(Request $request) {
+
+    $rows = $request->input('rows');
+    $columns = $request->input('columns');
+    $cells = $request->input('cells');
+
+    // Verify inputs
+    if (!$rows || !$columns || !$cells) {
+      return [ 'error' => [
+        'code' => Config::get('constants.http_status.BAD_REQUEST'),
+        'message' => Config::get('constants.responses.MISSING_FIELDS_OR_WRONG_INPUTS')
+      ]];
+    }
+
     $userId = $request->user()->id;
 
     // Build a new game
@@ -34,14 +48,14 @@ class GameController extends Controller {
     $game->status = 0;
     $game->time = 0;
     $game->score = 0;
-    $game->rows = $request->input('rows');
-    $game->columns = $request->input('columns');
+    $game->rows = $rows;
+    $game->columns = $columns;
 
     // Store game
     $game->save();
 
     // Next, store cells for game
-    $cells = $request->input('cells');
+
     // transform cells matrix, from string to object
     $cells = json_decode($cells);
 
@@ -61,18 +75,18 @@ class GameController extends Controller {
         $newCell->save();
 
         $createdCells[] = [
-          "id"=>$newCell->id,
-          "x"=>$newCell->x,
-          "y"=>$newCell->y,
+          'id'=>$newCell->id,
+          'x'=>$newCell->x,
+          'y'=>$newCell->y,
         ];
       }
     }
 
     // Response ids of created elements
     return [
-      "game"=>[
-        "id"=>$game->id,
-        "cells"=>$createdCells
+      'game'=>[
+        'id'=>$game->id,
+        'cells'=>$createdCells
       ]
     ];
   }
@@ -80,14 +94,22 @@ class GameController extends Controller {
   /**
    * Get the specified game.
    *
+   * @param Request $request
    * @param  Game  $game
    * @return Response
    */
-  public function show(Game $game) {
+  public function show(Request $request, Game $game) {
+    // Verify owner
+    if ($game->user_id != $request->user()->id) {
+      return [ 'error' => [
+        'code' => Config::get('constants.http_status.FORBIDDEN'),
+        'message' => 'User cannot access this game'
+      ]];
+    }
     // Retrieve cells for game
     $game->cells;
     return [
-      "game"=>$game
+      'game'=>$game
     ];
   }
 
@@ -100,14 +122,34 @@ class GameController extends Controller {
    */
   public function updateWithCells(Request $request, Game $game) {
 
-    $game->time = $request->input("time");
-    $game->score = $request->input("score");
+    $time = $request->input('time');
+    $score = $request->input('score');
+    $cells = $request->input('cells');
+
+    // Verify owner
+    if ($game->user_id != $request->user()->id) {
+      return [ 'error' => [
+        'code' => Config::get('constants.http_status.FORBIDDEN'),
+        'message' => 'User cannot update this game'
+      ]];
+    }
+
+    // Verify inputs
+    if (!$time || !$score || !$cells) {
+      return [ 'error' => [
+        'code' => Config::get('constants.http_status.BAD_REQUEST'),
+        'message' => Config::get('constants.responses.MISSING_FIELDS_OR_WRONG_INPUTS')
+      ]];
+    }
+
+    $game->time = $time;
+    $game->score = $score;
 
     // Update time and score for game
     $game->save();
 
     // Next, update cells for game
-    $cells = $request->input('cells');
+
     // transform cells array, from string to object
     $cells = json_decode($cells);
 
@@ -116,18 +158,18 @@ class GameController extends Controller {
       $updateData = [];
       $needsUpdate = false;
       // Verify if there is comething to update in cell
-      if (property_exists($cell, "flag")) {
-        $updateData["flag"] = $cell->flag;
+      if (property_exists($cell, 'flag')) {
+        $updateData['flag'] = $cell->flag;
         $needsUpdate = true;
       }
-      if (property_exists($cell, "pressed")) {
-        $updateData["pressed"] = $cell->pressed;
+      if (property_exists($cell, 'pressed')) {
+        $updateData['pressed'] = $cell->pressed;
         $needsUpdate = true;
       }
 
       if ($needsUpdate) {
         // Update cell info
-        Cell::where("id", $cell->id)->update($updateData);
+        Cell::where('id', $cell->id)->update($updateData);
       }
     }
 
@@ -142,7 +184,25 @@ class GameController extends Controller {
    * @return Response
    */
   public function update(Request $request, Game $game) {
-    $game->status = $request->input("status");
+    $status = $request->input('status');
+
+    // Verify owner
+    if ($game->user_id != $request->user()->id) {
+      return [ 'error' => [
+        'code' => Config::get('constants.http_status.FORBIDDEN'),
+        'message' => 'User cannot update this game'
+      ]];
+    }
+
+    // Verify inputs
+    if (!$status) {
+      return [ 'error' => [
+        'code' => Config::get('constants.http_status.BAD_REQUEST'),
+        'message' => Config::get('constants.responses.MISSING_FIELDS_OR_WRONG_INPUTS')
+      ]];
+    }
+
+    $game->status = $status;
 
     // Update the status for game
     $game->save();

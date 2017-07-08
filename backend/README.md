@@ -1,19 +1,16 @@
-Minesweeper Game Backend
-========================
+# Minesweeper Game Backend
 
 > Backend for the classic game of Minesweeper
 
 
-Requirements
-============
+## Requirements
 
 * PHP >= 7.1.6
 * Composer >= 1.4.2
 * Laravel >= 5.4.28
 * MySql
 
-Installation
-============
+## Installation
 
 1. Create a mysql database named `minesweeper`
 2. Set database user and password in `config/database.php` file (mysql section)
@@ -36,8 +33,11 @@ touch .env
 # generate base64 key for backend laravel project, add generated key to .env file: APP_KEY=<key>
 php artisan key:generate
 
-#clear config cache
+# clear config cache
 php artisan config:clear
+
+# serve project, use `--host 0.0.0.0` option to make public server
+php artisan serve
 
 ```
 
