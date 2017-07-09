@@ -135,7 +135,7 @@ class GameController extends Controller {
     }
 
     // Verify inputs
-    if (!$time || !$score || !$cells) {
+    if ($time === NULL || $score === NULL || !$cells) {
       return [ 'error' => [
         'code' => Config::get('constants.http_status.BAD_REQUEST'),
         'message' => Config::get('constants.responses.MISSING_FIELDS_OR_WRONG_INPUTS')
@@ -195,7 +195,7 @@ class GameController extends Controller {
     }
 
     // Verify inputs
-    if (!$status) {
+    if ($status === NULL) {
       return [ 'error' => [
         'code' => Config::get('constants.http_status.BAD_REQUEST'),
         'message' => Config::get('constants.responses.MISSING_FIELDS_OR_WRONG_INPUTS')
