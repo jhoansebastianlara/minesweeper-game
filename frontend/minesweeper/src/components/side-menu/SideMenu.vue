@@ -13,11 +13,11 @@
          @click="$emit('login')">
         {{ $t('global.login') }}
       </a>
-      <span v-else class="truncate-text">{{ session.authUser }}</span>
+      <span v-else class="truncate-text">{{ session.authUser.username }}</span>
     </div>
 
     <div v-if="session.userloggedIn" class="item">
-      <a @click="logout" class="option">
+      <a @click="doLogout" class="option">
         {{ $t('global.logout') }}
       </a>
     </div>
@@ -29,6 +29,12 @@
   import authMixin from '@/mixins/authMixin'
 
   export default {
+    methods: {
+      doLogout () {
+        this.logout()
+      }
+    },
+
     mixins: [authMixin]
   }
 </script>

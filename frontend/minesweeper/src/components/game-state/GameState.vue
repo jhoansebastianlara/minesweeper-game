@@ -11,12 +11,15 @@
 
       <div class="item">
         <div class="timer">
-          <span>{{ time }}</span>
+          <span>{{ game.time }}</span>
         </div>
       </div>
 
       <div class="item">
-        <div class="flag-option">{{ $t('game.flag') }}</div>
+        <div :class="{'flag-option': !flagPressed, 'flag-option-pressed': flagPressed}"
+             @click="flagPressed = !flagPressed">
+          {{ $t('game.flag') }}
+        </div>
       </div>
     </div>
     <div class="options"></div>
@@ -26,6 +29,7 @@
 <script>
   import EventBus from '@/shared/EventBus'
   import {CONSTANTS} from '@/shared/constants'
+  import authMixin from '@/mixins/authMixin'
   import gameMixin from '@/mixins/gameMixin'
 
   export default {
@@ -34,7 +38,14 @@
     data () {
       return {
         timer: null,
-        time: 0
+        time: 0,
+        flagPressed: false
+      }
+    },
+
+    watch: {
+      time (time) {
+        this.setTime(time)
       }
     },
 
@@ -69,12 +80,11 @@
       })
 
       EventBus.$on(CONSTANTS.EVENTS.GAME_FINISH, (status) => {
-        console.log('GAME_FINISH: ', status)
         this.stopTimer()
       })
     },
 
-    mixins: [gameMixin]
+    mixins: [authMixin, gameMixin]
   }
 </script>
 
@@ -160,13 +170,24 @@
       }
 
       .flag-option {
-        background: color(grays, dark);
-        padding: .2em .7em;
-        color: color(grays, light);
-        border-radius: .25em;
+        // background: color(grays, dark);
+        padding: .4em .7em;
+        color: color(grays, dark);
+        // border-radius: .25em;
         white-space: nowrap;
+        box-sizing: border-box;
+        border-width: 0 1px 1px 0;
+        border: solid $cell-border-color;
+        background-color: $cell-background-color;
+      }
+
+      .flag-option-pressed {
+        @extend .flag-option;
+        // transform: translateY(.1em);
+        border: solid color(primary-light);
+        background-color: color(primary);
+        color: white;
       }
     }
-
   }
 </style>

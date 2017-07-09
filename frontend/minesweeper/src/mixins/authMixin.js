@@ -1,4 +1,4 @@
-import { mapGetters, mapActions } from 'vuex'
+import { mapGetters, mapMutations, mapActions } from 'vuex'
 import types from '@/store/types'
 
 export default {
@@ -12,6 +12,10 @@ export default {
     ...mapActions({
       login: types.auth.actions.login,
       logout: types.auth.actions.logout
+    }),
+
+    ...mapMutations({
+      setAuthUser: types.auth.mutations.setAuthUser
     })
   }
 }

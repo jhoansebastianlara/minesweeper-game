@@ -52,14 +52,17 @@ export const MINESWEEPER = {
 
 export const INITIAL_GAME_STATE = () => {
   return {
-    level: MINESWEEPER.LEVELS.MEDIUM,
+    level: MINESWEEPER.LEVELS.EASY,
     status: MINESWEEPER.GAME.STATUS.READY_TO_PLAY,
     grid: null,
     flagsNum: 0,
     cellsRevealedNum: 0,
     moves: 0,
     time: 0,
-    score: 0
+    // TODO
+    score: 0,
+    // comes from api when the game is saved
+    gameId: null
   }
 }
 
@@ -96,4 +99,8 @@ export const ERROR_CODES = {
   MISSING_FIELDS: 45,
   // Corresponds with HTTP 500 - An unknown internal error occurred.
   INTERNAL_ERROR: 131
+}
+
+export const LOCAL_STORAGE = {
+  AUTH_USER: 'minesweeper:auth_user'
 }

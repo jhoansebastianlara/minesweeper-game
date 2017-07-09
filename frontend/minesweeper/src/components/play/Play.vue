@@ -3,12 +3,18 @@
     <auth v-show="showAuthModal" @close="showAuthModal = false"></auth>
     <side-menu v-show="showSideMenu"
                @close="showSideMenu = false"
-               @login="showAuthModal = true">
+               @login="showAuthModal = true; showSideMenu = false">
     </side-menu>
 
     <game-state @openMenu="showSideMenu = true"></game-state>
 
     <game-grid></game-grid>
+
+    <pre>cellsRevealedNum: {{game.cellsRevealedNum}}</pre>
+    <pre>moves: {{game.moves}}</pre>
+    <pre>time: {{game.time}}</pre>
+    <pre>gameId: {{game.gameId}}</pre>
+    <pre>status: {{game.status}}</pre>
 
     <transition name="fade">
       <div class="game-finished" v-show="showGameOver || showWinner">
@@ -20,9 +26,10 @@
 </template>
 
 <script>
+  import authMixin from '@/mixins/authMixin'
   import gameMixin from '@/mixins/gameMixin'
   import EventBus from '@/shared/EventBus'
-  import {MINESWEEPER} from '@/shared/constants'
+  import {MINESWEEPER, LOCAL_STORAGE} from '@/shared/constants'
   // components
   import SideMenu from '@/components/side-menu/SideMenu'
   import GameState from '@/components/game-state/GameState'
@@ -36,14 +43,13 @@
       return {
         showWinner: false,
         showGameOver: false,
-        showSideMenu: true,
+        showSideMenu: false,
         showAuthModal: false
       }
     },
 
     watch: {
       'game.status' (newStatus) {
-        console.log('newStatus: ', newStatus)
         switch (newStatus) {
           case MINESWEEPER.GAME.STATUS.PLAYING:
             EventBus.gameStart()
@@ -67,6 +73,12 @@
     },
 
     mounted () {
+      let authUser = JSON.parse(localStorage.getItem(LOCAL_STORAGE.AUTH_USER))
+
+      // check if some user is logged in
+      if (authUser && authUser.token) {
+        this.setAuthUser(authUser)
+      }
     },
 
     components: {
@@ -76,7 +88,7 @@
       Auth
     },
 
-    mixins: [gameMixin]
+    mixins: [authMixin, gameMixin]
   }
 </script>
 

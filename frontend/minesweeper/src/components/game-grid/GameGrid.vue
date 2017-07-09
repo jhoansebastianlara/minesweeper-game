@@ -24,7 +24,9 @@
 <script>
   import GridCell from '@/components/game-grid/GridCell'
   import {CONSTANTS} from '@/shared/constants'
+  import utils from '@/shared/utils'
   import EventBus from '@/shared/EventBus'
+  import authMixin from '@/mixins/authMixin'
   import gameMixin from '@/mixins/gameMixin'
 
   export default {
@@ -32,8 +34,8 @@
 
     data () {
       return {
-        // grid: null,
-        debugging: false
+        debugging: false,
+        saveGameDebounceFn: null
       }
     },
 
@@ -70,8 +72,8 @@
         let y = 0
 
         while (minesPlanted < this.game.level.minesNum) {
-          x = this.getRandomNumber(this.game.level.rowsNum)
-          y = this.getRandomNumber(this.game.level.colsNum)
+          x = utils.getRandomNumber(this.game.level.rowsNum)
+          y = utils.getRandomNumber(this.game.level.colsNum)
 
           if (!this.game.grid[x][y].hasMine) {
             this.plantMine({x, y})
@@ -135,18 +137,18 @@
         let surroundingPositions = [
           // cell up
           {x: x - 1, y},
-          // cell down
-          {x: x + 1, y},
-          // cell left
-          {x, y: y - 1},
-          // cell right
-          {x, y: y + 1},
           // cell upper right
           {x: x - 1, y: y + 1},
+          // cell right
+          {x, y: y + 1},
           // cell lower right
           {x: x + 1, y: y + 1},
+          // cell down
+          {x: x + 1, y},
           // cell lower left
           {x: x + 1, y: y - 1},
+          // cell left
+          {x, y: y - 1},
           // cell upper left
           {x: x - 1, y: y - 1}
         ]
@@ -157,10 +159,6 @@
         })
 
         return surroundingPositions
-      },
-
-      getRandomNumber (max) {
-        return Math.floor((Math.random() * 1000) + 1) % max
       }
     },
 
@@ -170,6 +168,8 @@
         if (!this.cellHasMine(x, y)) {
           this.checkIfRevealSurroundingCells(x, y)
         }
+
+        if (this.session.userloggedIn) this.saveGameDebounceFn()
       })
 
       EventBus.$on(CONSTANTS.EVENTS.RESET_GAME, () => {
@@ -179,6 +179,9 @@
 
     mounted () {
       this.setup()
+      this.saveGameDebounceFn = utils.debounce(() => {
+        this.saveGame()
+      }, 500)
       // debugging mode
       this.debugging = this.$route.query && this.$route.query.debugging
     },
@@ -187,7 +190,7 @@
       GridCell
     },
 
-    mixins: [gameMixin]
+    mixins: [authMixin, gameMixin]
   }
 </script>
 
@@ -195,7 +198,7 @@
   @import "~styles";
 
   .game-grid {
-    // padding-top: $game-state-bar-height + .5;
+    padding-top: $game-state-bar-height + .5;
     display: flex;
     align-items: center;
     // height: 100%;

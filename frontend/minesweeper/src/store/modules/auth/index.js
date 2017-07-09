@@ -1,6 +1,11 @@
-import {ENDPOINTS, HTTP_STATUS, ERROR_CODES} from '@/shared/constants'
-import types from '@/store/types'
 import Vue from 'vue'
+import {
+  ENDPOINTS,
+  HTTP_STATUS,
+  ERROR_CODES,
+  LOCAL_STORAGE
+} from '@/shared/constants'
+import types from '@/store/types'
 
 const state = {
   session: {
@@ -17,9 +22,15 @@ const getters = {
 }
 
 const mutations = {
-  [types.auth.mutations.setAuthUser]: (state, user) => {
-    state.session.authUser = user
-    state.session.userloggedIn = (user !== null)
+  [types.auth.mutations.setAuthUser]: (state, data) => {
+    state.session.authUser = data
+    state.session.userloggedIn = (data !== null)
+
+    if (data && data.token) {
+      localStorage.setItem(LOCAL_STORAGE.AUTH_USER, JSON.stringify(data))
+    } else {
+      localStorage.removeItem(LOCAL_STORAGE.AUTH_USER)
+    }
   }
 }
 
@@ -27,29 +38,6 @@ const actions = {
   [types.auth.actions.login]: ({commit}, username) => {
     console.log('logIn...')
     return new Promise((resolve, reject) => {
-      // Vue.http.get(ENDPOINTS.GAMES.ROOT)
-      //   .then(response => {
-      //     console.log('response: ', response)
-      //
-      //     // validate the response status code is ok
-      //     if (response.status === HTTP_STATUS.OK) {
-      //       let data = response.body
-      //       console.log('data: ', data)
-      //
-      //       resolve({success: true})
-      //     } else {
-      //       resolve({
-      //         success: false,
-      //         error: ERROR_CODES.INTERNAL_ERROR
-      //       })
-      //     }
-      //   }, response => {
-      //     // error callback
-      //     reject({
-      //       success: false,
-      //       error: ERROR_CODES.INTERNAL_ERROR
-      //     })
-      //   })
       Vue.http.post(ENDPOINTS.USER.AUTH, {username})
         .then(response => {
           console.log('response: ', response)
@@ -58,8 +46,10 @@ const actions = {
           if (response.status === HTTP_STATUS.OK) {
             let data = response.body
             console.log('data: ', data)
+            let token = data.token
+            let userId = data.user ? data.user.id : null
             // set the authenticated user
-            commit(types.auth.mutations.setAuthUser, username)
+            commit(types.auth.mutations.setAuthUser, {username, token, userId})
             resolve({success: true})
           } else {
             resolve({
@@ -78,7 +68,6 @@ const actions = {
   },
 
   [types.auth.actions.logout]: ({commit}) => {
-    console.log('logout...')
     return new Promise((resolve, reject) => {
       // destroy authenticated user
       commit(types.auth.mutations.setAuthUser, null)

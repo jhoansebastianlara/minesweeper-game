@@ -22,7 +22,7 @@ export default new Vue({
     },
 
     gameFinish (status) {
-      this.$emit(CONSTANTS.EVENTS.GAME_FINISH)
+      this.$emit(CONSTANTS.EVENTS.GAME_FINISH, status)
     }
   }
 })

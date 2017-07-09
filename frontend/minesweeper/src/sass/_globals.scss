@@ -53,7 +53,7 @@ a {
 
 .cell {
 	@extend ._cell;
-	background: $cell-background-color;
+	background-color: $cell-background-color;
 	border: solid $cell-border-color;
 	border-width: 0 1px 1px 0;
 

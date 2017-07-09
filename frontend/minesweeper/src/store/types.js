@@ -21,9 +21,13 @@ export default {
 
   game: namespace('game', {
     getters: [
-      'getGame'
+      'getGame',
+      'getDirtyCells'
     ],
     actions: [
+      'createGame',
+      'saveGame',
+      'saveFinishedGame',
       'startGame',
       'restartGame',
       'revealCell',
