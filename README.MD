@@ -4,6 +4,8 @@ The classic game of Minesweeper written in VueJS + Laravel
 
 See it running: [DEMO](http://138.68.9.12:3000/)
 
+![alt text](https://user-images.githubusercontent.com/8799407/28038590-1249f3be-6585-11e7-8957-dc2f2101c234.png)
+
 - It is divided into two parts:
 
 ### Back-end
