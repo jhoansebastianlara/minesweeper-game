@@ -10,8 +10,6 @@
 
     <game-grid></game-grid>
 
-    gameId: {{ game.gameId }}
-
     <transition name="fade">
       <div class="game-finished" v-show="showGameOver || showWinner">
         <span class="game-over" v-show="showGameOver">{{ $t('game.game_over') }}</span>

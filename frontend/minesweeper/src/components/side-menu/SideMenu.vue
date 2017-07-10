@@ -25,7 +25,6 @@
     <levels></levels>
 
     <my-games v-show="session.userloggedIn"></my-games>
-
   </div>
 </template>
 

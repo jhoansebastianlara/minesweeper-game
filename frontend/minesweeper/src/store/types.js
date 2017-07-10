@@ -24,7 +24,8 @@ export default {
       'getGame',
       'getDirtyCells',
       'getMyGames',
-      'getCurrentLevel'
+      'getCurrentLevel',
+      'getFlagPressed'
     ],
     actions: [
       'createGame',
@@ -46,7 +47,8 @@ export default {
       'addAdjacentMine',
       'setRevealCell',
       'setTime',
-      'setGameStatus'
+      'setGameStatus',
+      'switchFlagPressed'
     ]
   })
 }
