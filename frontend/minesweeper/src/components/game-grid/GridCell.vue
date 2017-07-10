@@ -144,7 +144,7 @@
       let cellEventName = (CONSTANTS.EVENTS.REVEAL_CELL_BASE).replace('[ID]', this.data.id)
       // called to when revealing cells automatically
       EventBus.$on(cellEventName, () => {
-        if (!this.isRevealed) {
+        if (!this.isRevealed && this.data.flag === 0) {
           this.revealCell({cell: this.data, automatically: true})
         }
       })

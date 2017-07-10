@@ -1,7 +1,7 @@
 {
   "name": "minesweeper-game",
   "version": "1.0.0",
-  "description": "The classic game of Minesweeper",
+  "description": "The classic game of Minesweeper wrote in vuejs + laravel",
   "author": "Sebastián <jhoansebastianlara@gmail.com>",
   "private": true,
   "scripts": {
