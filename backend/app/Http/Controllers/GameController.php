@@ -16,7 +16,7 @@ class GameController extends Controller {
    */
   public function index(Request $request) {
     // load games for logged user
-    $games = Game::where('user_id', $request->user()->id)->get();
+    $games = Game::where('user_id', $request->user()->id)->orderBy('created_at', 'desc')->get();
     return ['games'=>$games];
   }
 
