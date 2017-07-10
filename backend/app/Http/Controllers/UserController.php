@@ -22,7 +22,7 @@ class UserController extends Controller {
     $games = [];
     if ($user) {
       // Retrieve games for user
-      $games = $user->games;
+      $games = $user->games()->orderBy('created_at', 'desc')->get();
     } else {
       // Create user for new username
       $user = new User;
