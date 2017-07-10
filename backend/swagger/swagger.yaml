@@ -1,0 +1,292 @@
+swagger: '2.0'
+info:
+  description: Backend for the classic game of Minesweeper
+  title: Minesweeper API
+  version: 1.0.0
+host: '138.68.9.12:8000'
+schemes:
+  - http
+basePath: /api
+produces:
+  - application/json
+  - text/html
+securityDefinitions:
+  apiKeyAuth:
+    type: apiKey
+    name: Authorization
+    in: header
+    description: HTTP Basic Authentication with a token.
+paths:
+  /auth:
+    post:
+      summary: Authenticate user.
+      description: |
+        Endpoint that authenticate a user. If it is a new username,
+        this endpoint creates a new `User` and next authenticate it.
+      consumes:
+        - application/x-www-form-urlencoded
+        - application/json
+      parameters:
+        - name: user
+          in: body
+          required: false
+          description: Object with user name to login
+          schema:
+            type: object
+            properties:
+              username:
+                type: string
+                description: |
+                  User name to authenticate user and generate
+                  access token.
+      tags:
+        - 'User, Login, Auth'
+      responses:
+        '200':
+          description: 'An object with logged user info, and a new access token.'
+          schema:
+            type: object
+            properties:
+              user:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  games:
+                    type: array
+                    items:
+                      $ref: '#/definitions/Game'
+              token:
+                type: string
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  /games:
+    get:
+      summary: Get basic information about games.
+      description: |
+        The Games endpoint returns information about the stored
+        games for a user.
+      security:
+        - apiKeyAuth: []
+      tags:
+        - Games
+      responses:
+        '200':
+          description: An object with an array of games.
+          schema:
+            type: object
+            properties:
+              games:
+                $ref: '#/definitions/Game'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+    post:
+      summary: Create a new game.
+      description: Endpoint that creates a minesweeper game.
+      security:
+        - apiKeyAuth: []
+      consumes:
+        - application/x-www-form-urlencoded
+        - application/json
+      parameters:
+        - name: game
+          in: body
+          required: true
+          description: The minesweeper game data to save.
+          schema:
+            type: object
+            properties:
+              rows:
+                type: integer
+                description: The number of rows you want to save in the game.
+              columns:
+                type: integer
+                description: The number of columns you want to save in the game.
+              cells:
+                type: array
+                items:
+                  type: object
+                  allOf:
+                    - $ref: '#/definitions/Cell'
+      tags:
+        - Games
+        - Cells
+      responses:
+        '200':
+          description: An object with created game info.
+          schema:
+            type: object
+            properties:
+              game:
+                $ref: '#/definitions/Game'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  '/games/{game}':
+    parameters:
+      - name: game
+        in: path
+        description: Game identifier to update
+        required: true
+        type: integer
+    get:
+      summary: Get a specific game
+      security:
+        - apiKeyAuth: []
+      tags:
+        - Games
+        - Cells
+      responses:
+        '200':
+          description: Object with the game info.
+          schema:
+            type: object
+            properties:
+              game:
+                $ref: '#/definitions/Game'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+    put:
+      summary: Update info for a game.
+      description: 'Updates a game status, 0: playing, 1: paused, 2: won, 3: lost.'
+      security:
+        - apiKeyAuth: []
+      consumes:
+        - application/x-www-form-urlencoded
+        - application/json
+      parameters:
+        - name: status
+          in: body
+          required: true
+          description: The game status to set.
+          schema:
+            type: integer
+      tags:
+        - Games
+      responses:
+        '200':
+          description: Game updated.
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  '/games/{game}/cells':
+    parameters:
+      - name: game
+        in: path
+        description: Game identifier to update
+        required: true
+        type: integer
+    put:
+      summary: 'Update cells, time an score for a game.'
+      security:
+        - apiKeyAuth: []
+      consumes:
+        - application/x-www-form-urlencoded
+        - application/json
+      parameters:
+        - name: gameInfo
+          in: body
+          required: true
+          description: 'The time, score and cells to update game.'
+          schema:
+            type: object
+            properties:
+              time:
+                type: integer
+                description: The time expended in the game.
+              score:
+                type: integer
+                description: The number of points scored in the game.
+              cells:
+                type: array
+                items:
+                  type: object
+                  allOf:
+                    - $ref: '#/definitions/Cell'
+      tags:
+        - Games
+        - Cells
+      responses:
+        '200':
+          description: Game and cells updated.
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+definitions:
+  Game:
+    type: object
+    properties:
+      id:
+        type: integer
+        description: Game identifier.
+      status:
+        type: integer
+        description: 'Status of the game, 0: playing, 1: paused, 2: won, 3: lost.'
+      time:
+        type: integer
+        description: Time in seconds expended in the game.
+      score:
+        type: integer
+        description: Score of the game.
+      rows:
+        type: integer
+        description: Number of row for minesweeper game.
+      columns:
+        type: integer
+        description: Number of columns for minesweeper game.
+      user_id:
+        type: integer
+        description: Owner identifier of the game.
+      created_at:
+        type: string
+        format: date-time
+        description: Creation date of the game.
+      updated_at:
+        type: string
+        format: date-time
+        description: Update date of the game.
+      cells:
+        type: array
+        items:
+          $ref: '#/definitions/Cell'
+  Cell:
+    type: object
+    properties:
+      id:
+        type: integer
+        description: Unique identifier for the cell.
+      x:
+        type: integer
+        description: X-axis position of the cell in the game.
+      'y':
+        type: integer
+        description: Y-axis position of the cell in the game.
+      pressed:
+        type: integer
+        description: 'Indicates if cell has been revealed, 0: no_pressed, 1: pressed.'
+      has_mine:
+        type: integer
+        description: 'Indicates if cell has a mine, 0: no, 1: yes.'
+      flag:
+        type: integer
+        description: 'Indicates if cell has been marked with a flag, 0: no, 1: yes, 2: ?.'
+      game_id:
+        type: integer
+        description: Game identifier for the cell.
+  Error:
+    type: object
+    properties:
+      code:
+        type: integer
+        format: int32
+      message:
+        type: string
