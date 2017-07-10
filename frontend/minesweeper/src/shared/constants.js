@@ -52,7 +52,7 @@ export const MINESWEEPER = {
 
 export const INITIAL_GAME_STATE = () => {
   return {
-    level: MINESWEEPER.LEVELS.EASY,
+    level: MINESWEEPER.LEVELS.MEDIUM,
     status: MINESWEEPER.GAME.STATUS.READY_TO_PLAY,
     grid: null,
     flagsNum: 0,

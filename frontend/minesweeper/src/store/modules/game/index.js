@@ -25,7 +25,9 @@ let formatToString = (cells) => {
 }
 
 const state = {
-  game: INITIAL_GAME_STATE()
+  game: INITIAL_GAME_STATE(),
+  myGames: [],
+  currentLevel: INITIAL_GAME_STATE().level
 }
 
 const getters = {
@@ -45,6 +47,14 @@ const getters = {
     })
 
     return dirtyCells
+  },
+
+  [types.game.getters.getMyGames]: (state) => {
+    return state.myGames
+  },
+
+  [types.game.getters.getCurrentLevel]: (state) => {
+    return state.currentLevel
   }
 }
 
@@ -52,6 +62,14 @@ const mutations = {
   [types.game.mutations.setGame]: (state, newGame) => {
     state.game.status = MINESWEEPER.GAME.STATUS.READY_TO_PLAY
     state.game = newGame
+  },
+
+  [types.game.mutations.setMyGames]: (state, myGames) => {
+    state.myGames = myGames
+  },
+
+  [types.game.mutations.setCurrentLevel]: (state, newLevel) => {
+    state.currentLevel = newLevel
   },
 
   [types.game.mutations.setGrid]: (state, newGrid) => {
@@ -114,6 +132,12 @@ const actions = {
               let winner = state.game.status === MINESWEEPER.GAME.STATUS.WINNER
               if (gameOver || winner) {
                 dispatch(types.game.actions.saveFinishedGame)
+                  .then(response => {
+                    // keep update the games when the current game
+                    if (response.success) {
+                      dispatch(types.game.actions.searchMyGames)
+                    }
+                  })
               }
             }
 
@@ -187,6 +211,31 @@ const actions = {
           // validate the response status code is ok
           if (response.status === HTTP_STATUS.OK) {
             let data = response.body
+            resolve({success: true, data})
+          } else {
+            resolve({
+              success: false,
+              error: ERROR_CODES.INTERNAL_ERROR
+            })
+          }
+        }, response => {
+          // error callback
+          reject({
+            success: false,
+            error: ERROR_CODES.INTERNAL_ERROR
+          })
+        })
+    })
+  },
+
+  [types.game.actions.searchMyGames]: ({state, commit}) => {
+    return new Promise((resolve, reject) => {
+      Vue.http.get(ENDPOINTS.GAMES.ROOT)
+        .then(response => {
+          // validate the response status code is ok
+          if (response.status === HTTP_STATUS.OK) {
+            let data = response.body
+            commit(types.game.mutations.setMyGames, data.games)
             resolve({success: false, data})
           } else {
             resolve({
@@ -227,9 +276,17 @@ const actions = {
     })
   },
 
-  [types.game.actions.restartGame]: ({commit}) => {
+  [types.game.actions.restartGame]: ({commit, state}, level) => {
     return new Promise((resolve, reject) => {
-      commit(types.game.mutations.setGame, INITIAL_GAME_STATE())
+      let initialGameState = INITIAL_GAME_STATE()
+      if (level) {
+        initialGameState.level = level
+        commit(types.game.mutations.setCurrentLevel, level)
+      } else {
+        initialGameState.level = state.currentLevel
+      }
+
+      commit(types.game.mutations.setGame, initialGameState)
       EventBus.resetGame()
       resolve({success: true})
     })

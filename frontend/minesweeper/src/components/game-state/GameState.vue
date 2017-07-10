@@ -5,7 +5,7 @@
     </div>
     <div class="game-info-container">
       <div class="item">
-        <div class="cell-minesweeper" @click="restartGame">
+        <div class="cell-minesweeper" @click="restartGame(null)">
         </div>
       </div>
 

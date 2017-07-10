@@ -5,13 +5,26 @@ export default {
     close: 'Close',
     login: 'Login',
     logout: 'Logout',
-    general_error: 'Something was wrong, try later'
+    general_error: 'Something was wrong, try later',
+    myGames: 'My Games',
+    none: 'None'
   },
 
   game: {
     game_over: 'GAME OVER',
-    you_won: 'YOU WIN!',
-    flag: 'Flag'
+    you_win: 'YOU WIN!',
+    flag: 'Flag',
+    level: 'Level',
+    easy: 'Easy',
+    medium: 'Medium',
+    hard: 'Hard',
+    grid: 'Grid',
+    time: 'Time',
+    status: 'Status',
+    playing: 'Playing',
+    pause: 'Pause',
+    you_won: 'You Won',
+    you_lost: 'You Lost'
   },
 
   user: {

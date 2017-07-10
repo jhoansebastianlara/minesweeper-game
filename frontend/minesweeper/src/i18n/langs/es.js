@@ -5,13 +5,26 @@ export default {
     close: 'Cerrar',
     login: 'Iniciar Sesión',
     logout: 'Cerrar Sessión',
-    general_error: 'Algo estuvo mal, intenta más tarde'
+    general_error: 'Algo estuvo mal, intenta más tarde',
+    myGames: 'Mis Juegos',
+    none: 'Ninguno'
   },
 
   game: {
     game_over: 'GAME OVER',
-    you_won: '¡GANASTE!',
-    flag: 'Bandera'
+    you_win: '¡GANASTE!',
+    flag: 'Bandera',
+    level: 'Nivel',
+    easy: 'Fácil',
+    medium: 'Medio',
+    hard: 'Dificil',
+    grid: 'Cuadrícula',
+    time: 'Tiempo',
+    status: 'Estado',
+    playing: 'Jugando',
+    pause: 'Pausado',
+    you_won: 'Ganaste',
+    you_lost: 'Perdiste'
   },
 
   user: {

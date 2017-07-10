@@ -7,7 +7,7 @@ Vue.use(VueResource)
 
 Vue.http.options.root = config.api.root
 Vue.http.interceptors.push((request, next) => {
-  // console.log('request: ', request)
+  console.log('request: ', request)
   next()
 })
 

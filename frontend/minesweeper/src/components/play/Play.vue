@@ -3,23 +3,19 @@
     <auth v-show="showAuthModal" @close="showAuthModal = false"></auth>
     <side-menu v-show="showSideMenu"
                @close="showSideMenu = false"
-               @login="showAuthModal = true; showSideMenu = false">
+               @login="showAuthModal = true; showSideMenu = true">
     </side-menu>
 
     <game-state @openMenu="showSideMenu = true"></game-state>
 
     <game-grid></game-grid>
 
-    <pre>cellsRevealedNum: {{game.cellsRevealedNum}}</pre>
-    <pre>moves: {{game.moves}}</pre>
-    <pre>time: {{game.time}}</pre>
-    <pre>gameId: {{game.gameId}}</pre>
-    <pre>status: {{game.status}}</pre>
+    gameId: {{ game.gameId }}
 
     <transition name="fade">
       <div class="game-finished" v-show="showGameOver || showWinner">
         <span class="game-over" v-show="showGameOver">{{ $t('game.game_over') }}</span>
-        <span class="you-won" v-show="showWinner">{{ $t('game.you_won') }}</span>
+        <span class="you-won" v-show="showWinner">{{ $t('game.you_win') }}</span>
       </div>
     </transition>
   </div>

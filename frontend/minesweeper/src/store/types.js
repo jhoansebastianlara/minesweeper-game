@@ -22,12 +22,15 @@ export default {
   game: namespace('game', {
     getters: [
       'getGame',
-      'getDirtyCells'
+      'getDirtyCells',
+      'getMyGames',
+      'getCurrentLevel'
     ],
     actions: [
       'createGame',
       'saveGame',
       'saveFinishedGame',
+      'searchMyGames',
       'startGame',
       'restartGame',
       'revealCell',
@@ -36,6 +39,8 @@ export default {
     ],
     mutations: [
       'setGame',
+      'setMyGames',
+      'setCurrentLevel',
       'setGrid',
       'plantMine',
       'addAdjacentMine',

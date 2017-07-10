@@ -22,17 +22,28 @@
       </a>
     </div>
 
+    <levels></levels>
+
+    <my-games v-show="session.userloggedIn"></my-games>
+
   </div>
 </template>
 
 <script>
   import authMixin from '@/mixins/authMixin'
+  import Levels from '@/components/levels/Levels'
+  import MyGames from '@/components/my-games/MyGames'
 
   export default {
     methods: {
       doLogout () {
         this.logout()
       }
+    },
+
+    components: {
+      Levels,
+      MyGames
     },
 
     mixins: [authMixin]
@@ -53,6 +64,7 @@
     z-index: 2;
     font-size: 1.2rem;
     border-right: 1px solid rgba(0, 0, 0, .5);
+    overflow-y: scroll;
 
     .item-top {
       @extend .item;
@@ -85,5 +97,12 @@
         width: 100%;
       }
     }
+
+    .item-title {
+      @extend .item;
+      background: color(grays, dark);
+      color: white;
+    }
+
   }
 </style>

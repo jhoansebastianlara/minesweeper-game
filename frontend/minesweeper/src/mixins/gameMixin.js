@@ -11,6 +11,8 @@ export default {
   computed: {
     ...mapGetters({
       session: types.auth.getters.getSession,
+      myGames: types.game.getters.getMyGames,
+      currentLevel: types.game.getters.getCurrentLevel,
       game: types.game.getters.getGame
     })
   },
@@ -18,7 +20,7 @@ export default {
   methods: {
     ...mapActions({
       saveGame: types.game.actions.saveGame,
-      saveFinishedGame: types.game.actions.saveFinishedGame,
+      searchMyGames: types.game.actions.searchMyGames,
       startGame: types.game.actions.startGame,
       revealCell: types.game.actions.revealCell,
       gameOver: types.game.actions.gameOver,

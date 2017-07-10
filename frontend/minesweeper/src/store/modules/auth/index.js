@@ -35,21 +35,20 @@ const mutations = {
 }
 
 const actions = {
-  [types.auth.actions.login]: ({commit}, username) => {
-    console.log('logIn...')
+  [types.auth.actions.login]: ({rootState, commit}, username) => {
     return new Promise((resolve, reject) => {
       Vue.http.post(ENDPOINTS.USER.AUTH, {username})
         .then(response => {
-          console.log('response: ', response)
-
           // validate the response status code is ok
           if (response.status === HTTP_STATUS.OK) {
             let data = response.body
-            console.log('data: ', data)
             let token = data.token
             let userId = data.user ? data.user.id : null
+            let games = data.user ? data.user.games : []
             // set the authenticated user
             commit(types.auth.mutations.setAuthUser, {username, token, userId})
+            // set my games
+            rootState.game.myGames = games
             resolve({success: true})
           } else {
             resolve({
@@ -67,10 +66,12 @@ const actions = {
     })
   },
 
-  [types.auth.actions.logout]: ({commit}) => {
+  [types.auth.actions.logout]: ({rootState, commit}) => {
     return new Promise((resolve, reject) => {
       // destroy authenticated user
       commit(types.auth.mutations.setAuthUser, null)
+      // remove user games
+      rootState.game.myGames = []
       resolve({success: true})
     })
   }
