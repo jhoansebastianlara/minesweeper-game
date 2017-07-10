@@ -23,14 +23,14 @@ const getters = {
 
 const mutations = {
   [types.auth.mutations.setAuthUser]: (state, data) => {
-    state.session.authUser = data
-    state.session.userloggedIn = (data !== null)
-
     if (data && data.token) {
       localStorage.setItem(LOCAL_STORAGE.AUTH_USER, JSON.stringify(data))
     } else {
       localStorage.removeItem(LOCAL_STORAGE.AUTH_USER)
     }
+
+    state.session.authUser = data
+    state.session.userloggedIn = (data !== null)
   }
 }
 

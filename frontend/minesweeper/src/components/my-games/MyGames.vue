@@ -2,7 +2,7 @@
   <div class="games">
     <div class="item-title">
       <h2 class="title">
-        {{ $t('global.myGames') }}
+        {{ $t('global.myGames') }} ({{ myGames.length }})
       </h2>
     </div>
 
@@ -31,16 +31,21 @@
 </template>
 
 <script>
+  import authMixin from '@/mixins/authMixin'
   import gameMixin from '@/mixins/gameMixin'
 
   export default {
     name: 'my-games',
 
-    mounted () {
-      this.searchMyGames()
+    watch: {
+      'session.userloggedIn' (logged) {
+        if (logged) {
+          this.searchMyGames()
+        }
+      }
     },
 
-    mixins: [gameMixin]
+    mixins: [authMixin, gameMixin]
   }
 </script>
 

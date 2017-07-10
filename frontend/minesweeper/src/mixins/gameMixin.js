@@ -13,7 +13,8 @@ export default {
       session: types.auth.getters.getSession,
       myGames: types.game.getters.getMyGames,
       currentLevel: types.game.getters.getCurrentLevel,
-      game: types.game.getters.getGame
+      game: types.game.getters.getGame,
+      flagPressed: types.game.getters.getFlagPressed
     })
   },
 
@@ -31,7 +32,8 @@ export default {
       setGrid: types.game.mutations.setGrid,
       plantMine: types.game.mutations.plantMine,
       addAdjacentMine: types.game.mutations.addAdjacentMine,
-      setTime: types.game.mutations.setTime
+      setTime: types.game.mutations.setTime,
+      switchFlagPressed: types.game.mutations.switchFlagPressed
     })
   }
 }

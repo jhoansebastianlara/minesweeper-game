@@ -3,14 +3,14 @@
     <auth v-show="showAuthModal" @close="showAuthModal = false"></auth>
     <side-menu v-show="showSideMenu"
                @close="showSideMenu = false"
-               @login="showAuthModal = true; showSideMenu = true">
+               @login="showAuthModal = true">
     </side-menu>
 
     <game-state @openMenu="showSideMenu = true"></game-state>
 
     <game-grid></game-grid>
 
-    gameId: {{ game.gameId }}
+    <credits></credits>
 
     <transition name="fade">
       <div class="game-finished" v-show="showGameOver || showWinner">
@@ -31,6 +31,7 @@
   import GameState from '@/components/game-state/GameState'
   import GameGrid from '@/components/game-grid/GameGrid'
   import Auth from '@/components/auth/Auth'
+  import Credits from '@/components/credits/Credits'
 
   export default {
     name: 'play',
@@ -81,7 +82,8 @@
       SideMenu,
       GameState,
       GameGrid,
-      Auth
+      Auth,
+      Credits
     },
 
     mixins: [authMixin, gameMixin]

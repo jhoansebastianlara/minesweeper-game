@@ -1,7 +1,7 @@
 <template>
   <div :class="classObject"
        @click="reveal">
-    <span v-if="!data.hasMine">{{ data.adjacentMinesNum || '' }}</span>
+    <span v-if="!data.hasMine && (data.isRevealed || data.revealed)">{{ data.adjacentMinesNum || '' }}</span>
   </div>
 </template>
 
@@ -55,6 +55,23 @@
           }
         } else {
           classes['cell'] = true
+
+          if (this.flagPressed) {
+            classes['cell-ready-to-flag'] = true
+          }
+
+          switch (this.data.flag) {
+            case 1:
+              classes['cell-flag-active'] = true
+              break
+            case 2:
+              classes['cell-question-active'] = true
+              break
+          }
+
+          if (this.game.status === MINESWEEPER.GAME.STATUS.WINNER) {
+            classes['cell-flag-active'] = true
+          }
         }
 
         return classes
@@ -107,7 +124,18 @@
     methods: {
       reveal () {
         if (this.isPlaying) {
-          this.revealCell({cell: this.data, automatically: false})
+          if (this.flagPressed) {
+            this.data.flag++
+
+            if (this.data.flag >= 3) {
+              this.data.flag = 0
+            }
+          } else {
+            // check if the cell don't have flag
+            if (this.data.flag !== 1) {
+              this.revealCell({cell: this.data, automatically: false})
+            }
+          }
         }
       }
     },
@@ -116,7 +144,7 @@
       let cellEventName = (CONSTANTS.EVENTS.REVEAL_CELL_BASE).replace('[ID]', this.data.id)
       // called to when revealing cells automatically
       EventBus.$on(cellEventName, () => {
-        if (!this.isRevealed) {
+        if (!this.isRevealed && this.data.flag === 0) {
           this.revealCell({cell: this.data, automatically: true})
         }
       })
@@ -128,6 +156,40 @@
 
 <style lang="scss">
   @import "~styles";
+
+  .cell-ready-to-flag {
+    &:after {
+      background-position: center center;
+      background-size: 20%;
+      background-repeat: no-repeat;
+      background-image: url("../../assets/icons/filled-circle.png");
+    }
+  }
+
+  .cell-flag-active {
+    &:after {
+      background-position: center center;
+      background-size: 50%;
+      background-repeat: no-repeat;
+      background-image: url("../../assets/icons/flag.png");
+    }
+
+    &:active:after {
+      background-position: center center;
+      background-size: 50%;
+      background-repeat: no-repeat;
+      background-image: url("../../assets/icons/flag.png");
+    }
+  }
+
+  .cell-question-active {
+    &:after {
+      background-position: center center;
+      background-size: 50%;
+      background-repeat: no-repeat;
+      background-image: url("../../assets/icons/question.png");
+    }
+  }
 
   // Numbers
   .one {

@@ -7,11 +7,10 @@ Vue.use(VueResource)
 
 Vue.http.options.root = config.api.root
 Vue.http.interceptors.push((request, next) => {
-  console.log('request: ', request)
+  let authUser = JSON.parse(localStorage.getItem(LOCAL_STORAGE.AUTH_USER))
+  if (authUser && authUser.token) {
+    Vue.http.headers.common['Authorization'] = 'Bearer ' + authUser.token
+  }
+  // console.log('request: ', request)
   next()
 })
-
-let authUser = JSON.parse(localStorage.getItem(LOCAL_STORAGE.AUTH_USER))
-if (authUser && authUser.token) {
-  Vue.http.headers.common['Authorization'] = 'Bearer ' + authUser.token
-}

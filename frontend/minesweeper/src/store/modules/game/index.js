@@ -27,7 +27,8 @@ let formatToString = (cells) => {
 const state = {
   game: INITIAL_GAME_STATE(),
   myGames: [],
-  currentLevel: INITIAL_GAME_STATE().level
+  currentLevel: INITIAL_GAME_STATE().level,
+  flagPressed: false
 }
 
 const getters = {
@@ -55,6 +56,10 @@ const getters = {
 
   [types.game.getters.getCurrentLevel]: (state) => {
     return state.currentLevel
+  },
+
+  [types.game.getters.getFlagPressed]: (state) => {
+    return state.flagPressed
   }
 }
 
@@ -102,6 +107,10 @@ const mutations = {
 
   [types.game.mutations.setGameStatus]: (state, newStatus) => {
     state.game.status = newStatus
+  },
+
+  [types.game.mutations.switchFlagPressed]: (state) => {
+    state.flagPressed = !state.flagPressed
   }
 }
 

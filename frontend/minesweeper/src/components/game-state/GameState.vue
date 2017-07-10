@@ -16,9 +16,9 @@
       </div>
 
       <div class="item">
-        <div :class="{'flag-option': !flagPressed, 'flag-option-pressed': flagPressed}"
-             @click="flagPressed = !flagPressed">
-          {{ $t('game.flag') }}
+        <div class="flag-container"
+             :class="{'flag-actived': flagPressed}"
+             @click="switchFlagPressed">
         </div>
       </div>
     </div>
@@ -38,8 +38,7 @@
     data () {
       return {
         timer: null,
-        time: 0,
-        flagPressed: false
+        time: 0
       }
     },
 
@@ -52,7 +51,6 @@
     methods: {
       startTimer () {
         this.clearTimer()
-
         this.timer = setInterval(() => {
           this.time++
         }, 1000)
@@ -96,7 +94,7 @@
     justify-content: space-between;
     align-items: center;
     // flex-direction: column;
-    background: color(grays, medium);
+    background: color(blue-light-sky);
     position: fixed;
     top: 0;
     right: 0;
@@ -169,24 +167,44 @@
         }
       }
 
-      .flag-option {
-        // background: color(grays, dark);
-        padding: .4em .7em;
-        color: color(grays, dark);
-        // border-radius: .25em;
-        white-space: nowrap;
-        box-sizing: border-box;
-        border-width: 0 1px 1px 0;
-        border: solid $cell-border-color;
-        background-color: $cell-background-color;
+      .flag-container {
+        border: 1px solid red;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background: color(grays, medium);
+        min-width: $cell-size + .5;
+        width: $cell-size + .5;
+        height: $cell-size + .5;
+        min-height: $cell-size + .5;
+
+        border: 2px outset $cell-border-ouset-color;
+        background-position: center center;
+        background-size: 50%;
+        background-repeat: no-repeat;
+        background-image: url("../../assets/icons/flag.png");
+        -webkit-filter: grayscale(70%); /* Safari 6.0 - 9.0 */
+        filter: grayscale(70%);
+
+        &:active {
+      		background: color(grays, light);
+          background-position: center center;
+          background-size: 50%;
+          background-repeat: no-repeat;
+          background-image: url("../../assets/icons/flag.png");
+          -webkit-filter: none; /* Safari 6.0 - 9.0 */
+          filter: none;
+      	}
       }
 
-      .flag-option-pressed {
-        @extend .flag-option;
-        // transform: translateY(.1em);
-        border: solid color(primary-light);
-        background-color: color(primary);
-        color: white;
+      .flag-actived {
+        background: color(grays, light);
+        background-position: center center;
+        background-size: 50%;
+        background-repeat: no-repeat;
+        background-image: url("../../assets/icons/flag.png");
+        -webkit-filter: none; /* Safari 6.0 - 9.0 */
+        filter: none;
       }
     }
   }

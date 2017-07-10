@@ -58,7 +58,8 @@
               id: x + '-' + y,
               hasMine: false,
               adjacentMinesNum: 0,
-              isRevealed: false
+              isRevealed: false,
+              flag: 0
             }
           }
         }
